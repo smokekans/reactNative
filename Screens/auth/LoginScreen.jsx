@@ -14,6 +14,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
   ScrollView,
+  Alert,
   // Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -68,6 +69,10 @@ function LoginScreen() {
   const onSubmit = () => {
     setState(initialState);
     console.log(state);
+    Alert.alert(
+      "Credentials",
+      `Email: ${state.email}, Password: ${state.password}`
+    );
   };
 
   return (
@@ -146,10 +151,10 @@ function LoginScreen() {
               </View>
               <Pressable
                 style={styles.containerButtonSing}
-                onPress={() => {
-                  onSubmit;
-                  navigation.navigate("Registration");
-                }}
+                onPress={
+                  onSubmit
+                  // navigation.navigate("Registration");
+                }
               >
                 <Text style={styles.textButtonSing}>Увійти</Text>
               </Pressable>

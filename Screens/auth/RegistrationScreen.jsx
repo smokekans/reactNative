@@ -16,6 +16,7 @@ import {
   Keyboard,
   // Dimensions,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Ionicons, EvilIcons } from "@expo/vector-icons";
 import ImageBG from "../../assets/images/background.jpg";
@@ -70,6 +71,10 @@ function RegistrationScreen() {
   const onSubmit = () => {
     setState(initialState);
     console.log(state);
+    Alert.alert(
+      "Credentials",
+      `Username: ${state.username}, Email: ${state.email}, Password: ${state.password}`
+    );
   };
 
   return (
@@ -182,10 +187,10 @@ function RegistrationScreen() {
                 </View>
                 <Pressable
                   style={styles.containerButtonSing}
-                  onPress={() => {
-                    onSubmit;
-                    navigation.navigate("Login");
-                  }}
+                  onPress={
+                    onSubmit
+                    // navigation.navigate("Login");
+                  }
                 >
                   <Text style={styles.textButtonSing}>Зареєструватися</Text>
                 </Pressable>
