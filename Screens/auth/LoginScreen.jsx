@@ -22,7 +22,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import ImageBG from "../../assets/images/background.jpg";
 
-import { togglePasswordVisibility } from "../../hooks/passwordVisibilty";
+import { useTogglePasswordVisibility } from "../../hooks/usePasswordVisibilty";
 
 const initialState = {
   email: "",
@@ -32,7 +32,7 @@ const initialState = {
 function LoginScreen() {
   const navigation = useNavigation();
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
-    togglePasswordVisibility();
+    useTogglePasswordVisibility();
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   // const [dimensions, setDimensions] = useState(Dimensions.get("window").width);
@@ -151,10 +151,7 @@ function LoginScreen() {
               </View>
               <Pressable
                 style={styles.containerButtonSing}
-                onPress={
-                  onSubmit
-                  // navigation.navigate("Registration");
-                }
+                onPress={() => navigation.navigate("Posts")}
               >
                 <Text style={styles.textButtonSing}>Увійти</Text>
               </Pressable>

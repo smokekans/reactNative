@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const togglePasswordVisibility = () => {
+export const useTogglePasswordVisibility = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [rightIcon, setRightIcon] = useState("eye-off");
 

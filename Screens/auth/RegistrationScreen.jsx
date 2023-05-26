@@ -15,14 +15,13 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   // Dimensions,
-  ScrollView,
   Alert,
 } from "react-native";
-import { Ionicons, EvilIcons } from "@expo/vector-icons";
+import { Ionicons, EvilIcons, Octicons } from "@expo/vector-icons";
 import ImageBG from "../../assets/images/background.jpg";
 import ImageUser from "../../assets/images/user.jpg";
 
-import { togglePasswordVisibility } from "../../hooks/passwordVisibilty";
+import { useTogglePasswordVisibility } from "../../hooks/usePasswordVisibilty";
 import { useNavigation } from "@react-navigation/native";
 
 const initialState = {
@@ -34,7 +33,7 @@ const initialState = {
 function RegistrationScreen() {
   const navigation = useNavigation();
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
-    togglePasswordVisibility();
+    useTogglePasswordVisibility();
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   // const [dimensions, setDimensions] = useState(Dimensions.get("window").width);
@@ -98,15 +97,21 @@ function RegistrationScreen() {
             >
               <View style={styles.inputImageContainer}>
                 <Image style={styles.imageForm} source={ImageUser} />
-                <EvilIcons
+                {/* <EvilIcons
                   style={styles.iconAdd}
                   name="plus"
                   size={40}
                   color="#FF6C00"
+                /> */}
+                <Octicons
+                  style={styles.iconAdd}
+                  name="x-circle-fill"
+                  size={30}
+                  color="#BDBDBD"
                 />
               </View>
               <Text style={styles.titleForm}>Реєстрація</Text>
-              <ScrollView>
+              <View>
                 <TextInput
                   style={[
                     styles.inputForm,
@@ -187,17 +192,14 @@ function RegistrationScreen() {
                 </View>
                 <Pressable
                   style={styles.containerButtonSing}
-                  onPress={
-                    onSubmit
-                    // navigation.navigate("Login");
-                  }
+                  onPress={() => navigation.navigate("Posts")}
                 >
                   <Text style={styles.textButtonSing}>Зареєструватися</Text>
                 </Pressable>
                 <Pressable onPress={() => navigation.navigate("Login")}>
                   <Text style={styles.textButtonOr}>Вже є акаунт? Увійти</Text>
                 </Pressable>
-              </ScrollView>
+              </View>
             </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
@@ -209,7 +211,7 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   imageBackground: { flex: 1, height: "100%" },
   containerForm: {
-    flex: 0.7,
+    flex: 0.65,
     backgroundColor: "white",
     marginTop: "auto",
     borderTopStartRadius: 25,
@@ -231,7 +233,7 @@ const styles = StyleSheet.create({
   },
   iconAdd: {
     position: "absolute",
-    left: "60%",
+    left: "63%",
   },
   titleForm: {
     fontFamily: "Roboto-Medium",
