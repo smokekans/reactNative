@@ -91,7 +91,7 @@ function RegistrationScreen() {
             <View
               style={{
                 ...styles.containerForm,
-                marginBottom: isShowKeyboard ? 75 : 0,
+                marginBottom: isShowKeyboard ? 0 : 0,
                 // width: dimensions,
               }}
             >

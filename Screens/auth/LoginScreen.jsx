@@ -89,7 +89,7 @@ function LoginScreen() {
           <View
             style={{
               ...styles.containerForm,
-              marginBottom: isShowKeyboard ? 75 : 0,
+              marginBottom: isShowKeyboard ? 0 : 0,
               // width: dimensions,
             }}
           >
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   imageBackground: { flex: 1, height: "100%" },
   containerForm: {
-    flex: 0.7,
+    flex: 0.65,
     backgroundColor: "white",
     marginTop: "auto",
     borderTopStartRadius: 25,
