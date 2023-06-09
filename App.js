@@ -1,59 +1,48 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useFonts } from "expo-font";
-import { MaterialIcons } from "@expo/vector-icons";
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import RegistrationScreen from "./Screens/auth/RegistrationScreen";
-import LoginScreen from "./Screens/auth/LoginScreen";
-import { Pressable } from "react-native";
-import PostsScreen from "./Screens/PostsScreen";
-// import { useNavigation } from "@react-navigation/native";
+import * as SplashScreen from "expo-splash-screen";
+import { StyleSheet, View } from "react-native";
+import Main from "./Components/Main";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "./redux/store";
 
-const AuthStack = createNativeStackNavigator();
-// const HomeStack = createNativeStackNavigator();
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  // const navigation = useNavigation();
-
   const [fontsLoaded] = useFonts({
-    "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
-    "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
-    "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
+    "Roboto-400": require("./assets/fonts/Roboto-Regular.ttf"),
+    "Roboto-500": require("./assets/fonts/Roboto-Medium.ttf"),
+    "Roboto-700": require("./assets/fonts/Roboto-Bold.ttf"),
   });
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
 
   if (!fontsLoaded) {
     return null;
   }
   return (
-    <NavigationContainer>
-      <AuthStack.Navigator initialRouteName="Login">
-        <AuthStack.Screen
-          name="Registration"
-          component={RegistrationScreen}
-          options={{ headerShown: false }}
-        />
-        <AuthStack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{ headerShown: false }}
-        />
-        <AuthStack.Screen
-          name="Posts"
-          component={PostsScreen}
-          options={{
-            title: "Публікації",
-            headerRight: () => (
-              <Pressable
-                // onPress={() => navigation("Login")}
-                style={{ marginRight: 10 }}
-              >
-                <MaterialIcons name="logout" size={24} color="#BDBDBD" />
-              </Pressable>
-            ),
-          }}
-        />
-      </AuthStack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <View style={styles.container} onLayout={onLayoutRootView}>
+          <NavigationContainer>
+            <Main />
+          </NavigationContainer>
+        </View>
+      </PersistGate>
+    </Provider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#ffffff",
+    justifyContent: "center",
+  },
+});

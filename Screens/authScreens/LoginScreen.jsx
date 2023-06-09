@@ -1,42 +1,36 @@
-import React, {
-  // useEffect,
-  useState,
-} from "react";
+import React, { useState } from "react";
 import {
-  Image,
-  ImageBackground,
   StyleSheet,
   Text,
   TextInput,
   View,
   Pressable,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
-  Keyboard,
-  // Dimensions,
-  Alert,
+  ScrollView,
+  Dimensions,
 } from "react-native";
-import { Ionicons, EvilIcons, Octicons } from "@expo/vector-icons";
-import ImageBG from "../../assets/images/background.jpg";
-import ImageUser from "../../assets/images/user.jpg";
-
-import { useTogglePasswordVisibility } from "../../hooks/usePasswordVisibilty";
 import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+import { useTogglePasswordVisibility } from "../../hooks/useTogglePasswordVisibility";
+import BackgroundImage from "../../Components/BackgroundImage";
+import { useDispatch } from "react-redux";
+import { authSignIn } from "../../redux/authOperations";
 
 const initialState = {
-  username: "",
   email: "",
   password: "",
 };
 
-function RegistrationScreen() {
+function LoginScreen() {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility();
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
-  // const [dimensions, setDimensions] = useState(Dimensions.get("window").width);
   const [focusedInput, setFocusedInput] = useState(null);
 
   const isInputFocused = (inputName) => focusedInput === inputName;
@@ -51,88 +45,34 @@ function RegistrationScreen() {
     setFocusedInput(null);
   };
 
-  // useEffect(() => {
-  //   const onChange = () => {
-  //     const width = Dimensions.get("window").width;
-  //     setDimensions(width);
-  //   };
-  //   Dimensions.addEventListener("change", onChange);
-  //   return () => {
-  //     Dimensions.removeEventListener("change", onChange);
-  //   };
-  // }, [Dimensions]);
-
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
   };
 
   const onSubmit = () => {
+    Keyboard.dismiss();
+    dispatch(authSignIn(state));
     setState(initialState);
-    console.log(state);
-    Alert.alert(
-      "Credentials",
-      `Username: ${state.username}, Email: ${state.email}, Password: ${state.password}`
-    );
   };
 
   return (
-    <>
-      <ImageBackground
-        source={ImageBG}
-        resizeMode="cover"
-        style={styles.imageBackground}
-      >
-        <KeyboardAvoidingView
-          behavior={Platform.OS == "ios" ? "padding" : "height"}
-          style={styles.container}
-        >
-          <TouchableWithoutFeedback onPress={keyboardHide}>
+    <View style={styles.container}>
+      <BackgroundImage>
+        <TouchableWithoutFeedback onPress={keyboardHide}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ height: "100%", justifyContent: "flex-end" }}
+          >
             <View
               style={{
                 ...styles.containerForm,
-                marginBottom: isShowKeyboard ? 0 : 0,
-                // width: dimensions,
+                paddingBottom: isShowKeyboard ? 16 : 111,
+                width: Dimensions.get("window").width,
               }}
             >
-              <View style={styles.inputImageContainer}>
-                <Image style={styles.imageForm} source={ImageUser} />
-                {/* <EvilIcons
-                  style={styles.iconAdd}
-                  name="plus"
-                  size={40}
-                  color="#FF6C00"
-                /> */}
-                <Octicons
-                  style={styles.iconAdd}
-                  name="x-circle-fill"
-                  size={30}
-                  color="#BDBDBD"
-                />
-              </View>
-              <Text style={styles.titleForm}>Реєстрація</Text>
-              <View>
-                <TextInput
-                  style={[
-                    styles.inputForm,
-                    isInputFocused("username") && styles.inputFocused,
-                  ]}
-                  placeholder="Логін"
-                  placeholderTextColor="#BDBDBD"
-                  autoComplete="username"
-                  cursorColor="#BDBDBD"
-                  selectionColor="#555555"
-                  textContentType="username"
-                  value={state.username}
-                  onChangeText={(value) =>
-                    setState((prevState) => ({ ...prevState, username: value }))
-                  }
-                  onFocus={() => {
-                    handleInputFocus("username");
-                    setIsShowKeyboard(true);
-                  }}
-                  onBlur={handleInputBlur}
-                />
+              <Text style={styles.titleForm}>Увійти</Text>
+              <ScrollView>
                 <TextInput
                   style={[
                     styles.inputForm,
@@ -191,25 +131,27 @@ function RegistrationScreen() {
                   </Pressable>
                 </View>
                 <Pressable
-                  style={styles.containerButtonSing}
-                  onPress={() => navigation.navigate("Posts")}
+                  style={styles.containerButtonSign}
+                  onPress={onSubmit}
                 >
-                  <Text style={styles.textButtonSing}>Зареєструватися</Text>
+                  <Text style={styles.textButtonSign}>Увійти</Text>
                 </Pressable>
-                <Pressable onPress={() => navigation.navigate("Login")}>
-                  <Text style={styles.textButtonOr}>Вже є акаунт? Увійти</Text>
+                <Pressable onPress={() => navigation.navigate("Registration")}>
+                  <Text style={styles.textButtonOr}>
+                    Немає акаунту? Зареєструватися
+                  </Text>
                 </Pressable>
-              </View>
+              </ScrollView>
             </View>
-          </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
-      </ImageBackground>
-    </>
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+      </BackgroundImage>
+    </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  imageBackground: { flex: 1, height: "100%" },
   containerForm: {
     flex: 0.65,
     backgroundColor: "white",
@@ -233,25 +175,24 @@ const styles = StyleSheet.create({
   },
   iconAdd: {
     position: "absolute",
-    left: "63%",
+    left: "62%",
   },
   titleForm: {
-    fontFamily: "Roboto-Medium",
+    fontFamily: "Roboto-500",
     fontStyle: "normal",
     fontSize: 30,
     lineHeight: 35,
     textAlign: "center",
     letterSpacing: 0.01,
     color: "#212121",
-    marginTop: -42,
-    marginBottom: 32,
+    marginVertical: 32,
   },
   inputForm: {
     backgroundColor: "#F6F6F6",
     borderColor: "#E8E8E8",
     borderWidth: 1,
     borderRadius: 8,
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-400",
     fontStyle: "normal",
     fontSize: 16,
     lineHeight: 19,
@@ -262,9 +203,6 @@ const styles = StyleSheet.create({
   },
   inputFocused: {
     borderColor: "#FF6C00",
-  },
-  buttonFocused: {
-    backgroundColor: "#000000",
   },
   inputContainer: {
     flexDirection: "row",
@@ -279,7 +217,7 @@ const styles = StyleSheet.create({
     left: -40,
     bottom: 7,
   },
-  containerButtonSing: {
+  containerButtonSign: {
     backgroundColor: "#FF6C00",
     height: 50,
     paddingVertical: 16,
@@ -288,9 +226,9 @@ const styles = StyleSheet.create({
     marginTop: 27,
     marginBottom: 16,
   },
-  textButtonSing: {
+  textButtonSign: {
     color: "#FFFFFF",
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-400",
     fontStyle: "normal",
     fontSize: 16,
     lineHeight: 19,
@@ -298,12 +236,11 @@ const styles = StyleSheet.create({
   },
   textButtonOr: {
     color: "#1B4371",
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-400",
     fontStyle: "normal",
     fontSize: 16,
     lineHeight: 19,
     textAlign: "center",
   },
 });
-
-export default RegistrationScreen;
+export default LoginScreen;

@@ -9,29 +9,32 @@ import {
   View,
 } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
-import ImageUser from "../assets/images/user.jpg";
+import ImageUser from "../../assets/images/user.jpg";
+import { useSelector } from "react-redux";
+import { getUserAvatar } from "../../redux/authSelectors";
 
 function PostsScreen() {
+  const userAvatar = useSelector(getUserAvatar);
   const DATA = [
     {
       title: "Posts",
       data: [
         {
-          image: `${require("../assets/images/forest.jpg")}`,
+          image: `${require("../../assets/images/forest.jpg")}`,
           title: "Ліс",
           comments: "8",
           likes: "153",
           location: "Ukraine",
         },
         {
-          image: `${require("../assets/images/sunset.jpg")}`,
+          image: `${require("../../assets/images/sunset.jpg")}`,
           title: "Захід на Чорному морі",
           comments: "3",
           likes: "200",
           location: "Ukraine",
         },
         {
-          image: `${require("../assets/images/oldHouse.jpg")}`,
+          image: `${require("../../assets/images/oldHouse.jpg")}`,
           title: "Старий будиночок у Венеції",
           comments: "50",
           likes: "287",
@@ -42,9 +45,9 @@ function PostsScreen() {
   ];
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.boxImage}>
-        <Image style={styles.imageUser} source={ImageUser} alt="user" />
+        <Image style={styles.imageUser} source={{ userAvatar }} alt="user" />
         <View style={styles.boxInfo}>
           <Text style={styles.name}>Natali Romanova</Text>
           <Text style={styles.email}>email@example.com</Text>
@@ -55,7 +58,7 @@ function PostsScreen() {
           sections={DATA}
           keyExtractor={(item, index) => item + index}
           renderItem={({ item }) => (
-            <View>
+            <View style={styles.containerCard}>
               <Image
                 style={styles.imageMap}
                 source={item.image}
@@ -80,7 +83,7 @@ function PostsScreen() {
           )}
         />
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
@@ -97,13 +100,12 @@ const styles = StyleSheet.create({
     marginRight: 6,
     alignItems: "center",
   },
-
   boxInfo: {
     display: "flex",
     justifyContent: "center",
   },
   name: {
-    fontFamily: "Roboto-Bold",
+    fontFamily: "Roboto-700",
     fontStyle: "normal",
     fontWeight: 700,
     fontSize: 13,
@@ -111,7 +113,7 @@ const styles = StyleSheet.create({
     color: "#212121",
   },
   email: {
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-400",
     fontStyle: "normal",
     fontWeight: 400,
     fontSize: 11,
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   titleMap: {
-    fontFamily: "Roboto-Medium",
+    fontFamily: "Roboto-500",
     fontStyle: "normal",
     fontWeight: 500,
     fontSize: 16,
@@ -149,7 +151,7 @@ const styles = StyleSheet.create({
     marginLeft: "auto",
   },
   textMap: {
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-400",
     fontStyle: "normal",
     fontWeight: 400,
     fontSize: 16,
@@ -157,7 +159,7 @@ const styles = StyleSheet.create({
     color: "#212121",
   },
   textLocationMap: {
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto-400",
     fontStyle: "normal",
     fontWeight: 400,
     fontSize: 16,
